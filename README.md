@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DER Load Flow Analysis — IEEE 33-Bus Distribution System
 
 Load flow and 24-hour quasi-static time-series simulation of a radial distribution
@@ -115,3 +116,27 @@ Python · pandapower · NumPy · pandas · matplotlib
 ## License
 
 MIT
+=======
+# DER Load Flow Analysis for IEEE-33 Bus System
+Load flow study of a radial distribution network with integrated PV generation, Battery Energy Storage (BESS), and EV charging using pandapower.
+
+## What this project about
+- Run the base case and DER - integrated load flow on the predefined IEEE 33 bus test network.
+- Simulates one day (24-hour) voltahe variation with realistic PV and load profiles.
+- Models the Battery Energy Storage System dispatch (Charging during PV surplus/ discharge at peak loading)
+- Identifies voltage violations against allowable limits (0.95 - 1.05 pu)
+
+  ## Key Findings
+
+
+
+
+
+ ## How to run
+```bash
+pip install -r requirements.txt
+python src/main.py
+```
+## Tools
+Python || pandapower || NumPy || matplotlib
+>>>>>>> ab12d6877561254b99920857d37c71b40f4e6cee
