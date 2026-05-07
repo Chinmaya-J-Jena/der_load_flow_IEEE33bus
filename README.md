@@ -1,9 +1,6 @@
 <<<<<<< HEAD
 # DER Load Flow Analysis — IEEE 33-Bus Distribution System
-
-Load flow and 24-hour quasi-static time-series simulation of a radial distribution
-network with integrated PV generation, Battery Energy Storage (BESS), and EV
-charging, implemented in Python using pandapower.
+Load flow study of a radial distribution network with integrated PV generation, Battery Energy Storage (BESS), and EV charging implemented in Python using pandapower.
 
 ---
 
@@ -16,7 +13,7 @@ charging, implemented in Python using pandapower.
 | Total active power loss (MW) | 0.2027 | 0.1423 (min, hour 8) |
 | Voltage improvement | — | +2.74 % |
 
-> PV + BESS integration reduced the number of buses violating the IEEE 1547
+> PV & BESS integration reduced the number of buses violating the IEEE 1547 standard.
 > voltage lower limit from **21 to 6** — a **71 % reduction** — and improved
 > minimum bus voltage by **2.74 %**.
 
@@ -24,13 +21,13 @@ charging, implemented in Python using pandapower.
 
 ## Plots
 
-### Voltage profile: base case vs DER integration
+### Voltage profile: Without DER vs DER integrated
 ![Voltage comparison](results/01_voltage_profile_comparison.png)
 
-### 24-hour bus voltage envelope
+### One day bus voltage Profile
 ![Time-series voltage](results/02_timeseries_voltage.png)
 
-### DER dispatch and BESS state of charge
+### DER dispatch and BESS SoC
 ![DER dispatch](results/03_der_dispatch_and_soc.png)
 
 ### Hourly active power losses
@@ -43,7 +40,7 @@ charging, implemented in Python using pandapower.
 
 ## Network & DER Configuration
 
-**Test system:** IEEE 33-bus radial distribution network (Baran & Wu, 1989)  
+**Test system:** IEEE-33 bus radial distribution network.  
 **Base voltage:** 12.66 kV  
 **Total base load:** 3.715 MW + j2.300 MVAr  
 
@@ -95,8 +92,9 @@ All plots are saved to `results/` and a full time-series CSV is exported to
 ## Background
 
 This project is part of my broader research on DER-integrated microgrids, which
-includes MPC-based power management and hybrid energy storage systems. Related
-publications:
+includes MPC-based power management and hybrid energy storage systems. 
+
+My publications:
 
 - **Jena, C.J., Ray, P.K.** — *Power Quality Enhancement and Power Management of
   PV-HESS Based Grid-Tied Microgrid Using Model Predictive Control*, IEEE
@@ -117,26 +115,4 @@ Python · pandapower · NumPy · pandas · matplotlib
 
 MIT
 =======
-# DER Load Flow Analysis for IEEE-33 Bus System
-Load flow study of a radial distribution network with integrated PV generation, Battery Energy Storage (BESS), and EV charging using pandapower.
-
-## What this project about
-- Run the base case and DER - integrated load flow on the predefined IEEE 33 bus test network.
-- Simulates one day (24-hour) voltahe variation with realistic PV and load profiles.
-- Models the Battery Energy Storage System dispatch (Charging during PV surplus/ discharge at peak loading)
-- Identifies voltage violations against allowable limits (0.95 - 1.05 pu)
-
-  ## Key Findings
-
-
-
-
-
- ## How to run
-```bash
-pip install -r requirements.txt
-python src/main.py
-```
-## Tools
-Python || pandapower || NumPy || matplotlib
 >>>>>>> ab12d6877561254b99920857d37c71b40f4e6cee
