@@ -101,7 +101,7 @@ My publications:
 ---
 ## Tools
 
-Python · pandapower · NumPy · pandas · matplotlib
+Python · pandapower · NumPy · pandas and matplotlib
 
 ---
 
