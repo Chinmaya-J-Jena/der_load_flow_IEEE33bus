@@ -46,28 +46,25 @@ Load flow study of a radial distribution network with integrated PV generation, 
 
 | Asset | Bus | Rating | Basis for bus selection |
 |---|---|---|---|
-| PV Unit 1 | 14 | 2.0 MW peak | Lowest voltage in base case (end of longest feeder) |
-| PV Unit 2 | 31 | 2.0 MW peak | Second weakest bus (tail of second lateral) |
-| BESS | 31 | 0.5 MW / 2.0 MWh | Co-located with PV for loss reduction |
-| EV Charging | 28 | 1.5 MW peak | Mid-feeder representative node |
+| PV 1 | 14 | 2.0 MW peak | Lowest voltage in base case |
+| PV 2 | 31 | 2.0 MW peak | Second weakest bus |
+| BESS | 31 | 0.5 MW / 2.0 MWh | Combined with te PV for loss reduction |
+| EV  | 28 | 1.5 MW peak | At Mid-feeder  |
 
 **BESS dispatch strategy (rule-based):**
-- Charge when PV output > 30 % of rated and SOC < 90 % (hours 06:00–15:00)
-- Discharge during evening demand peak and SOC > 20 % (hours 18:00–22:00)
+- Charge when PV output > 30 % of rated and SOC < 90 % 
+- Discharge during evening demand peak and SOC > 20 % 
 - Round-trip efficiency: 95 %
-
 ---
-
 ## Project Structure
-
 ```
 der_load_flow_IEEE33bus/
 ├── src/
 │   ├── main.py          # Entry point — runs full simulation
 │   ├── network.py       # Network builder and DER asset creation
 │   ├── simulation.py    # Load flow, BESS dispatch, time-series loop
-│   └── plots.py         # All visualisation functions
-├── results/             # Generated plots and CSV (auto-created on run)
+│   └── plots.py         # Plot functions
+├── results/             # It generats the plots and CSV 
 ├── requirements.txt
 └── README.md
 ```
@@ -95,16 +92,13 @@ This project is part of my broader research on DER-integrated microgrids, which
 includes MPC-based power management and hybrid energy storage systems. 
 
 My publications:
-
 - **Jena, C.J., Ray, P.K.** — *Power Quality Enhancement and Power Management of
   PV-HESS Based Grid-Tied Microgrid Using Model Predictive Control*, IEEE
   Transactions on Industry Applications, 2024.
 - **Jena, C.J., Ray, P.K.** — *Power Allocation Scheme for Grid-Interactive
   Microgrid with Hybrid Energy Storage System Using Model Predictive Control*,
   Journal of Energy Storage, 2024.
-
 ---
-
 ## Tools
 
 Python · pandapower · NumPy · pandas · matplotlib
