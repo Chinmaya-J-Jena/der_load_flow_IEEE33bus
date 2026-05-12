@@ -1,9 +1,8 @@
 """
 plots.py
 --------
-All visualisation functions for the DER load flow study.
-Every function saves a PNG to the results/ folder AND
-returns the matplotlib Figure for optional inline display.
+To plot the results for the DER load flow study.
+
 """
 
 import os
@@ -12,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.gridspec import GridSpec
 
-# ── colour palette (consistent across all plots) ──────────────────────────────
+# ── colour assigining ──────────────────────────────
 C_BASE   = "#1f77b4"   # blue  — base case
 C_DER    = "#e87722"   # amber — with DER
 C_PV     = "#2ca02c"   # green — PV generation
@@ -39,7 +38,6 @@ def _save(fig, filename, save_path):
 # ── Plot 1 : Voltage profile comparison ───────────────────────────────────────
 def plot_voltage_comparison(base_v, der_v, save_path="results"):
     """
-    Bar-style comparison of bus voltage magnitudes:
     base case vs with PV + BESS + EV.
     """
     buses = range(len(base_v))
@@ -69,7 +67,7 @@ def plot_voltage_comparison(base_v, der_v, save_path="results"):
     ax.legend(fontsize=9, loc="lower left")
     ax.grid(True, alpha=0.3)
 
-    # annotate min voltage improvement
+    # points te min voltage improvement
     min_base = base_v.min()
     min_der  = der_v.min()
     ax.annotate(
@@ -94,7 +92,7 @@ def plot_voltage_comparison(base_v, der_v, save_path="results"):
 # ── Plot 2 : 24-hour voltage envelope ─────────────────────────────────────────
 def plot_timeseries_voltage(df, save_path="results"):
     """
-    Max and min bus voltage over 24 hours with status shading.
+    Max and min bus voltage over a day.
     """
     fig, ax = plt.subplots(figsize=(12, 5))
 
@@ -133,11 +131,10 @@ def plot_timeseries_voltage(df, save_path="results"):
     return _save(fig, "02_timeseries_voltage.png", save_path)
 
 
-# ── Plot 3 : DER dispatch profiles ────────────────────────────────────────────
+# ── Plot 3 : DER dispatch profiles ──────────────────────────────
 def plot_der_dispatch(df, save_path="results"):
     """
-    Stacked view of PV generation, BESS power, EV load,
-    and BESS state-of-charge over 24 hours.
+    PV generation, BESS power, EV load, and BESS SoC over a day.
     """
     fig = plt.figure(figsize=(13, 8))
     gs  = GridSpec(2, 1, figure=fig, hspace=0.35)
@@ -151,7 +148,7 @@ def plot_der_dispatch(df, save_path="results"):
     ax1.bar(hours,        df["Load_Scale"] * 1.5, width=0.25,
             color=C_EV, alpha=0.7, label="EV charging load (MW, scaled)")
 
-    # BESS: positive = discharge (green), negative = charge (purple)
+    # BESS: positive: discharge (dark cyan), negative: charge (purple)
     bess_charge    = df["BESS_MW"].clip(upper=0)
     bess_discharge = df["BESS_MW"].clip(lower=0)
     ax1.bar(hours + 0.25, bess_discharge, width=0.25,
@@ -169,7 +166,7 @@ def plot_der_dispatch(df, save_path="results"):
     ax1.legend(fontsize=8, ncol=2)
     ax1.grid(True, alpha=0.3, axis="y")
 
-    # ── bottom panel: BESS SOC ────────────────────────────────────────────────
+    # ── bottom panel: BESS SoC ────────────────────────────────────────────────
     ax2 = fig.add_subplot(gs[1])
     ax2.fill_between(hours, df["SOC_pct"], alpha=0.3, color=C_BESS)
     ax2.plot(hours, df["SOC_pct"], marker="o", markersize=4,
