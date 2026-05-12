@@ -1,10 +1,8 @@
 """
 network.py
 ----------
-Builds the IEEE 33-bus test network and attaches DER assets
-(PV, BESS, EV charging) at buses selected on the basis of
-voltage-sensitivity: buses 13 and 30 show the largest voltage
-depressions in the base-case load flow.
+Building of the IEEE 33-bus test network and DERs (PV, BESS, EV charging) at different buses, selected on the basis of
+voltage-sensitivity.
 """
 
 import pandapower as pp
@@ -13,7 +11,7 @@ import pandapower.networks as pn
 
 def build_base_network():
     """
-    Load the IEEE 33-bus radial distribution test system (Baran & Wu, 1989).
+    to Load the IEEE 33-bus radial distribution test system.
     Base voltage : 12.66 kV
     Total load   : 3.715 MW + j2.300 MVAr
     Returns
@@ -29,14 +27,12 @@ def add_ders(net, pv_mw=1.0, bess_mw=0.5, bess_mwh=2.0, ev_mw=1.0):
     Add PV generators, a Battery Energy Storage System (BESS),
     and an EV charging load to the network.
 
-    Bus selection rationale
-    -----------------------
-    Bus 13 : end of the longest feeder branch — lowest base-case voltage
-    Bus 30 : tail of the second lateral — second weakest bus
-    Bus 27 : mid-feeder node, representative EV charging point
+    Selected buses are:
+    Bus 13 : as it is the lowest base-case voltage
+    Bus 30 : second weakest bus
+    Bus 27 : EV charging point
 
-    Parameters
-    ----------
+    Parameters:
     net      : pandapowerNet  — base network (modified in place)
     pv_mw    : float          — rated PV output per unit (MW)
     bess_mw  : float          — BESS charge/discharge power rating (MW)
