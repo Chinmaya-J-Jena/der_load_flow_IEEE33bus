@@ -1,12 +1,12 @@
 """
-comparision.py
+comparison.py
 --------------------------
 comparision of IEEE 33-bus load flow results between pandapower and PSS/E .
 
 Both tools use Newton-Raphson solver on identical network data.
 
 Run:
-    python src/comparision.py
+    python src/comparison.py
 """
 
 import os
