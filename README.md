@@ -83,7 +83,7 @@ The base case load flow was independently solved in two tools:
 | Tool | Type | Solver | Language |
 |---|---|---|---|
 | pandapower | Newton-Raphson | Python 3 |
-| PSS/E | Newton-Raphson | - |
+| PSS/E | Newton-Raphson | -- |
 
 Both tools used identical network data:
 - Same bus topology (IEEE 33-bus)
