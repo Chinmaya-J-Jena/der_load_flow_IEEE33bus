@@ -1,10 +1,10 @@
 """
 simulation.py
 -------------
-Load flow and 24-hour time-series simulation functions.
+Load flow and 24-hour time-series simulation.
 
-Load flow solver : Newton-Raphson (pandapower default)
-Convergence tol  : 1e-8 pu (pandapower default)
+Load flow solver : Newton-Raphson 
+Convergence tol  : 1e-8 p.u. 
 """
 
 import numpy as np
@@ -12,8 +12,8 @@ import pandas as pd
 import pandapower as pp
 
 
-# ── IEEE voltage limits ────────────────────────────────────────────────────────
-V_UPPER = 1.05   # pu  (IEEE 1547 / ANSI C84.1 Range A)
+# ── IEEE voltage limits ──────────────────
+V_UPPER = 1.05   # pu  (Acording to the IEEE 1547 standrd)
 V_LOWER = 0.95   # pu
 
 
