@@ -2,7 +2,8 @@
 
 Load flow and 24-hour quasi-static time-series simulation of a radial distribution
 network with integrated PV generation, Battery Energy Storage (BESS), and EV
-charging, implemented in Python using pandapower.
+charging, implemented in Python using pandapower. Results cross-validated against
+PSS/E v33 — all 33 buses agree within 0.0001 pu.
 
 ---
 
@@ -29,22 +30,19 @@ charging, implemented in Python using pandapower.
 | Min bus voltage (pu) | 0.9131 (Bus 18) | 0.9405 (Bus 29) |
 | Buses below 0.95 pu | 21 | 6 |
 | Voltage improvement | — | +2.74 % |
-
-> PV + BESS integration reduced the number of buses violating the IEEE 1547
-> voltage lower limit from **21 to 6** — a **71 % reduction** — and improved
-> minimum bus voltage by **2.74 %**.
+| Reduction in violations | — | 71 % |
 
 ---
 
 ## Plots
 
-### Voltage profile: Without DER vs DER integrated
+### Voltage profile: base case vs DER integration
 ![Voltage comparison](results/01_voltage_profile_comparison.png)
 
-### One day bus voltage Profile
+### 24-hour bus voltage envelope
 ![Time-series voltage](results/02_timeseries_voltage.png)
 
-### DER dispatch and BESS SoC
+### DER dispatch and BESS state of charge
 ![DER dispatch](results/03_der_dispatch_and_soc.png)
 
 ### Hourly active power losses
@@ -60,32 +58,64 @@ charging, implemented in Python using pandapower.
 
 ## Network & DER Configuration
 
-**Test system:** IEEE 33-bus radial distribution network (Baran & Wu, 1989)  
-**Base voltage:** 12.66 kV  
-**Total base load:** 3.715 MW + j2.300 MVAr  
+**Test system:** IEEE 33-bus radial distribution network (Baran & Wu, 1989)
+**Base voltage:** 12.66 kV
+**Total base load:** 3.715 MW + j2.300 MVAr
 
 | Asset | Bus | Rating | Basis for bus selection |
 |---|---|---|---|
-| PV 1 | 14 | 2.0 MW peak | Lowest voltage in base case |
-| PV 2 | 31 | 2.0 MW peak | Second weakest bus |
-| BESS | 31 | 0.5 MW / 2.0 MWh | Combined with te PV for loss reduction |
-| EV  | 28 | 1.5 MW peak | At Mid-feeder  |
+| PV Unit 1 | 14 | 2.0 MW peak | Lowest voltage in base case (end of longest feeder) |
+| PV Unit 2 | 31 | 2.0 MW peak | Second weakest bus (tail of second lateral) |
+| BESS | 31 | 0.5 MW / 2.0 MWh | Co-located with PV for loss reduction |
+| EV Charging | 28 | 1.5 MW peak | Mid-feeder representative node |
 
 **BESS dispatch strategy (rule-based):**
-- Charge when PV output > 30 % of rated and SOC < 90 % 
-- Discharge during evening demand peak and SOC > 20 % 
+- Charge when PV output > 30 % of rated and SOC < 90 % (hours 06:00–15:00)
+- Discharge during evening demand peak and SOC > 20 % (hours 18:00–22:00)
 - Round-trip efficiency: 95 %
 
 ---
+
+## Cross-Validation Methodology
+
+The base case load flow was independently solved in two tools:
+
+| Tool | Type | Solver | Language |
+|---|---|---|---|
+| pandapower | Open-source Python library | Newton-Raphson | Python 3 |
+| PSS/E v33 | Industry-standard commercial software | Newton-Raphson | GUI + IPLAN |
+
+Both tools used identical network data:
+- Same bus topology (IEEE 33-bus, Baran & Wu 1989)
+- Same impedance values (converted to per unit on 100 MVA, 12.66 kV base)
+- Same load data (32 constant-power loads)
+- Same slack bus (Bus 1, V = 1.0 pu)
+
+**Result:** All 33 buses match within 0.0001 pu — confirming that the pandapower
+model is correctly implemented and suitable for DER integration studies.
+
+---
+
 ## Project Structure
+
 ```
 der_load_flow_IEEE33bus/
 ├── src/
-│   ├── main.py          # Entry point — runs full simulation
-│   ├── network.py       # Network builder and DER asset creation
-│   ├── simulation.py    # Load flow, BESS dispatch, time-series loop
-│   └── plots.py         # All visualisation functions
-├── results/             # Generated plots and CSV (auto-created on run)
+│   ├── main.py                       # Entry point — runs full simulation
+│   ├── network.py                    # Network builder and DER asset creation
+│   ├── simulation.py                 # Load flow, BESS dispatch, time-series loop
+│   ├── plots.py                      # All visualisation functions
+│   └── compare_psse_pandapower.py    # PSS/E vs pandapower cross-validation
+├── results/                          # Generated plots and CSV (auto-created on run)
+│   ├── 01_voltage_profile_comparison.png
+│   ├── 02_timeseries_voltage.png
+│   ├── 03_der_dispatch_and_soc.png
+│   ├── 04_power_losses.png
+│   ├── 05_voltage_violations.png
+│   ├── 06_pandapower_vs_psse_comparison.png
+│   └── timeseries_results.csv
+├── psse/
+│   └── IEEE33bus.sav                 # PSS/E v33 saved case file
 ├── requirements.txt
 └── README.md
 ```
@@ -112,47 +142,34 @@ All plots are saved to `results/` automatically.
 ## Background
 
 This project is part of my broader research on DER-integrated microgrids, which
-includes MPC-based power management and hybrid energy storage systems. 
+includes MPC-based power management and hybrid energy storage systems. Related
+publications:
 
-My publications:
 - **Jena, C.J., Ray, P.K.** — *Power Quality Enhancement and Power Management of
   PV-HESS Based Grid-Tied Microgrid Using Model Predictive Control*,
   IEEE Transactions on Industry Applications, 2024.
 - **Jena, C.J., Ray, P.K.** — *Power Allocation Scheme for Grid-Interactive
   Microgrid with Hybrid Energy Storage System Using Model Predictive Control*,
   Journal of Energy Storage, 2024.
+- **Jena, C.J., Ray, P.K.** — *Power Management in Three-Phase Grid-Integrated
+  PV System with Hybrid Energy Storage System*, Energies (MDPI), 2023.
 
 ---
+
 ## Tools
 
-Python · pandapower · NumPy · pandas · matplotlib
+Python · pandapower · NumPy · pandas · matplotlib · PSS/E v33
+
+---
+
+## Reference
+
+Baran, M.E. and Wu, F.F. (1989) *Network reconfiguration in distribution systems
+for loss reduction and load balancing*, IEEE Transactions on Power Delivery, 4(2),
+pp. 1401–1407.
 
 ---
 
 ## License
 
 MIT
-=======
-# DER Load Flow Analysis for IEEE-33 Bus System
-Load flow study of a radial distribution network with integrated PV generation, Battery Energy Storage (BESS), and EV charging using pandapower.
-
-## What this project about
-- Run the base case and DER - integrated load flow on the predefined IEEE 33 bus test network.
-- Simulates one day (24-hour) voltahe variation with realistic PV and load profiles.
-- Models the Battery Energy Storage System dispatch (Charging during PV surplus/ discharge at peak loading)
-- Identifies voltage violations against allowable limits (0.95 - 1.05 pu)
-
-  ## Key Findings
-
-
-
-
-
- ## How to run
-```bash
-pip install -r requirements.txt
-python src/main.py
-```
-## Tools
-Python || pandapower || NumPy || matplotlib
->>>>>>> ab12d6877561254b99920857d37c71b40f4e6cee
